@@ -193,17 +193,15 @@ void ToolChain::addCommonFrontendArgs(const OutputInfo &OI,
   }
 
   // Enable or disable ObjC interop appropriately for the platform
-  //if (Triple.isOSDarwin() &&
-  //    !containsValue(
-  //        inputArgs
-  //          .getAllArgValues(options::OPT_enable_experimental_feature),
-  //        "Embedded")) {
-  //  arguments.push_back("-enable-objc-interop");
-  //} else {
-  //  arguments.push_back("-disable-objc-interop");
-  //}
-
-  arguments.push_back("-enable-objc-interop");
+  if (
+      containsValue(
+          inputArgs
+            .getAllArgValues(options::OPT_enable_experimental_feature),
+          "Embedded")) {
+    arguments.push_back("-disable-objc-interop");
+  } else {
+    arguments.push_back("-enable-objc-interop");
+  }
 
   if (Triple.isOSOpenBSD() && Triple.getArch() == llvm::Triple::aarch64) {
 #ifdef SWIFT_OPENBSD_BTCFI
